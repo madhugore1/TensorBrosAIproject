@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="app_name">AI Video Upload</string>
+    <string name="btnUploadVideo">Upload Video</string>
+    <string name="btnUploadToServer">Upload to Server</string>
+
+</resources>
