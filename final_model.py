@@ -28,17 +28,17 @@ import keras.layers
 import keras.layers.convolutional
 import keras.layers.core
 
-base_model = VGG16(include_top=True, weights='imagenet')
-
-model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc2').output)
 """for layer in model.layers:
     print layer.name
 """
+base_model = VGG16(include_top=True, weights='imagenet')
+
+model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc2').output)
 clf=joblib.load("extra_tree.pkl")
 
 def imagefromvideos(filename):
     import subprocess as sp
-    cmd='ffmpeg -i ' + filename + ' -ss 00:00:10 -r 1 -s 224x224 -f image2 /home/madhura/Madhu/TensorBros/temp/%d.jpeg'
+    cmd='ffmpeg -i ' + filename + ' -ss 00:00:10 -r 1 -s 224x224 -f image2 temp/%d.jpeg'
     sp.call(cmd,shell=True)
 
 
@@ -56,8 +56,9 @@ def get_proba(img):
     return predict_proba
 
 def get_result(video_path):
-    imagefromvideos(video_path + '.mp4')
-    image_dir = "/home/madhura/Madhu/TensorBros/temp"
+    print(video_path)
+    imagefromvideos(video_path)
+    image_dir = "temp"
     # print ("hfh")
     # for f in os.listdir(image_dir):
     #     print ("fdsfaaaaaaaaa")
@@ -67,8 +68,9 @@ def get_result(video_path):
     image_files = [image_dir + "/" + f for f in os.listdir(image_dir) if f[-5:] == ".jpeg" or f[-4:] == ".JPG"]
     #os.chdir(image_dir)
     # print 'hi'
-    op = np.array([0]*np.array(image_files).shape)
-    print np.array(image_files).shape
+    print(image_files)
+    op = np.array([0]*np.array(image_files).shape[0])
+    print (np.array(image_files).shape)
     for image_file in image_files:
         img = cv2.imread(image_file, 1)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -77,7 +79,7 @@ def get_result(video_path):
 
     op = np.array(op);
     i = np.argmax(op);
-    print "cat=", i
+    print ("cat=", i)
 
 
     for the_file in os.listdir(image_dir):
@@ -89,4 +91,4 @@ def get_result(video_path):
         except Exception as e:
             print(e)
 
-    return 'python success'
+    return str(i)
